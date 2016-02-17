@@ -5,12 +5,14 @@
 const Koa = require('koa');
 const parse = require('co-body');
 
-let matchCollectionFromDB = require('./matchCollectionFromDB');
+let matchCollectionFromDB = require('./middlewares/matchCollectionFromDB');
+let allowMethod = require('./middlewares/allowMethod');
+let parseBody = require('./middlewares/parseBody');
 
 /* Create Koa Server */
 let app = Koa();
 
-app.use(function *(next) {
+app.use(function *setCrossOrigin(next) {
     console.log("\n-----------------------\n");
     this.set('Access-Control-Allow-Origin', '*');
     this.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -27,39 +29,7 @@ app.use(function *getCollectionNameFromUrl(next) {
 
 app.use(matchCollectionFromDB);
 
-function allowMethod(methods) {
-    return function * (next) {
-        let thisMethod = this.method;
-        let match = methods.some((method) => {
-            console.log(this);
-            return thisMethod === method;
-        });
-        if (match) {
-            yield next;
-        } else {
-            this.throw(405);
-        }
-    }
-}
-
 app.use(allowMethod(['GET', 'PUT', 'POST', 'DELETE']));
-
-let is = require('is-js');
-
-function parseBody() {
-    return function *(next) {
-        //console.log('header', this.header);
-        try {
-            this.request.body = yield parse.json(this);
-        } catch (e) {
-            this.throw(400, e);
-        }
-        if (!is.empty(this.request.body)) {
-            this.assert(this.is('application/json'), 400, 'Only Accepts JSON');
-        }
-        yield next;
-    }
-}
 
 app.use(parseBody());
 
