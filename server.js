@@ -12,6 +12,8 @@ let app = Koa();
 
 app.use(function *(next) {
     console.log("\n-----------------------\n");
+    this.set('Access-Control-Allow-Origin', '*');
+    this.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     yield next;
 });
 

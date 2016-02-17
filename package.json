@@ -1,0 +1,27 @@
+{
+  "name": "api2",
+  "version": "0.0.0",
+  "description": "一个建立api的api，所以叫做api的平方。 目标是创建一个机： 使得用户在client端建立了一个数据模型后： 在数据库端存储该模型， 然后当接受到来自http的请求后， 服务器分析该请求的url， 检索Schema，获得类型（memcached？） 根据类型，在数据库中作相应的检索 返回json 返回请求",
+  "main": "requestToOperation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "sepmein@hotmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "co-body": "^4.0.0",
+    "is-js": "^0.1.1",
+    "koa": "^1.1.2",
+    "koa-router": "^5.3.0",
+    "mongodb": "^2.1.4"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "The",
+    "API",
+    "to",
+    "generate",
+    "api."
+  ]
+}
