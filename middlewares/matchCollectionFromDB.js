@@ -1,9 +1,9 @@
 /**
  * Created by Spencer on 16/1/17.
  */
+"use strict";
 module.exports = function *matchCollectionFromDB(next) {
-    "use strict";
-    let collectionName = this.collectionName;
+    let collectionName = this.params.collection;
     try {
         let result =
             yield new Promise((resolve, reject)=> {
@@ -23,7 +23,6 @@ module.exports = function *matchCollectionFromDB(next) {
         console.log(e.stack);
         this.throw(503);
     }
-    this.collection = this.db.collection(this.collectionName);
-    delete this.collectionName;
+    this.collection = this.db.collection(collectionName);
     yield next;
 };
