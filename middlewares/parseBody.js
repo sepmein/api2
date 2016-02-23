@@ -1,8 +1,8 @@
 /**
  * Created by Spencer on 16/2/17.
  */
-
-let is = require('is-js');
+const parse = require('co-body');
+const is = require('is-js');
 
 module.exports = function parseBody() {
     return function *(next) {

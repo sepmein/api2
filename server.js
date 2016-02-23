@@ -3,7 +3,6 @@
  */
 'use strict';
 const Koa = require('koa');
-const parse = require('co-body');
 
 let matchCollectionFromDB = require('./middlewares/matchCollectionFromDB');
 let allowMethod = require('./middlewares/allowMethod');

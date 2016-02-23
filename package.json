@@ -13,8 +13,8 @@
     "co-body": "^4.0.0",
     "is-js": "^0.1.1",
     "koa": "^1.1.2",
-    "koa-router": "^5.3.0",
-    "mongodb": "^2.1.4"
+    "koa-router": "^5.4.0",
+    "mongodb": "^2.1.7"
   },
   "devDependencies": {},
   "keywords": [
