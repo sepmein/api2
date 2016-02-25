@@ -21,8 +21,13 @@ module.exports = function *(next) {
                 //有可能token过期,则应该更新token
                 //有可能token无效
                 //看看返回的error是什么,根据error的不同种类在决
-                console.log(e);
-                this.throw(403, 'require login');
+                if (e.name === 'TokenExpiredError') {
+                    this.throw(403, 'token expired');
+                } else if (e.name === 'JsonWebTokenError') {
+                    this.throw(403, 'token invalid');
+                } else {
+                    this.throw(500);
+                }
             }
         }
     } else {
