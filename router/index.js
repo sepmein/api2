@@ -10,14 +10,17 @@ function* getAuthCollectionFromDB(next) {
     this.collection = this.db.collection('user');
     yield next;
 }
-router.use('/auth', getAuthCollectionFromDB);
-router.get('/auth', function*(next) {
+router.use('/login', getAuthCollectionFromDB);
+router.use('/register', getAuthCollectionFromDB);
+router.post('/login', function* (next) {
     const bcrypt = require('../lib/bcrypt'),
         jwt = require('jsonwebtoken'),
         secret = process.env.JWT_SECRET || require('../secret');
 
     let userName = this.request.body.userName,
         password = this.request.body.password;
+
+    console.log(userName, password);
 
     let result =
         yield this.collection.find({
@@ -37,22 +40,22 @@ router.get('/auth', function*(next) {
                 };
             } else {
                 this.status = 401;
-                this.body = {message: 'password not match'};
+                this.body = { message: 'password not match' };
             }
         } catch (e) {
             console.log(e);
             console.log(e.stack);
             //this.throw(500, e);
             this.status = 500;
-            this.body = {message: 'Server Error: bcrypt compare error'};
+            this.body = { message: 'Server Error: bcrypt compare error' };
         }
     } else {
         this.status = 401;
-        this.body = {message: 'User not exist'};
+        this.body = { message: 'User not exist' };
     }
 });
 //register
-router.post('/auth', function*(next) {
+router.post('/register', function* (next) {
     const bcrypt = require('../lib/bcrypt'),
         jwt = require('jsonwebtoken'),
         secret = process.env.JWT_SECRET || require('../secret');
@@ -60,12 +63,12 @@ router.post('/auth', function*(next) {
     let userName = this.request.body.userName,
         password = this.request.body.password;
 
-    let result = yield this.collection.find({userName: userName}).toArray();
+    let result = yield this.collection.find({ userName: userName }).toArray();
 
     let existed = (result.length === 1);
     if (existed) {
         this.status = 403;
-        this.body = {message: 'user already existed'};
+        this.body = { message: 'user already existed' };
         return;
     }
     let hash;
@@ -85,8 +88,8 @@ router.post('/auth', function*(next) {
             userName: userName,
             _id: user._id
         }, secret, {
-            expiresIn: '7d'
-        });
+                expiresIn: '7d'
+            });
         this.status = 201;
         this.body = {
             userName: userName,
@@ -94,11 +97,11 @@ router.post('/auth', function*(next) {
         };
     } catch (error) {
         this.status = 400;
-        this.body = {message: error.message};
+        this.body = { message: error.message };
     }
 });
 //get user info
-router.get('/user/:id', function *(next) {
+router.get('/user/:id', function* (next) {
 });
 //data api
 //get app list from a user
@@ -112,7 +115,7 @@ router.del('/app');
 
 router.use('/app/:collection', verifyToken, matchCollectionFromDB);
 //read batch
-router.get('/app/:collection', function *readBatch(next) {
+router.get('/app/:collection', function* readBatch(next) {
     let limit = this.header.limit;
     let skip = this.header.skip;
     let options = {};
@@ -131,14 +134,14 @@ router.get('/app/:collection', function *readBatch(next) {
     this.body = result;
 });
 //read single
-router.get('/app/:collection/:id', function *readSingle(next) {
+router.get('/app/:collection/:id', function* readSingle(next) {
     const is = require('is-js');
     const ObjectId = require('mongodb').ObjectID;
     let id = this.params.id;
     this.assert(ObjectId.isValid(id), 404);
     let result;
     try {
-        result = yield this.collection.find({"_id": ObjectId(id)}).toArray();
+        result = yield this.collection.find({ "_id": ObjectId(id) }).toArray();
     } catch (e) {
         this.throw(500);
     }
@@ -151,7 +154,7 @@ router.get('/app/:collection/:id', function *readSingle(next) {
 });
 
 //create
-router.post('/app/:collection', function *create(next) {
+router.post('/app/:collection', function* create(next) {
     const is = require('is-js');
     let result;
     if (is.array(this.request.body)) {
@@ -175,7 +178,7 @@ router.post('/app/:collection', function *create(next) {
 //update
 router.put('/app/:collection');
 //delete collection
-router.del('/app/:collection', function *deleteBatch() {
+router.del('/app/:collection', function* deleteBatch() {
     let deleteOpResult;
     try {
         deleteOpResult = yield this.collection.deleteMany(this.request.body);
@@ -190,7 +193,7 @@ router.del('/app/:collection', function *deleteBatch() {
     }
 });
 //delete single
-router.del('/app/:collection/:id', function *deleteSingle() {
+router.del('/app/:collection/:id', function* deleteSingle() {
     const ObjectId = require('mongodb').ObjectID;
     const is = require('is-js');
 
@@ -198,7 +201,7 @@ router.del('/app/:collection/:id', function *deleteSingle() {
     this.assert(ObjectId.isValid(id), 404);
     let result;
     try {
-        result = yield this.collection.deleteOne({'_id': ObjectId(id)});
+        result = yield this.collection.deleteOne({ '_id': ObjectId(id) });
     } catch (e) {
         this.throw(503);
     }

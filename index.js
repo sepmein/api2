@@ -9,5 +9,5 @@ Mongo.connect('mongodb://localhost:27017/test', (err, db)=> {
         app.throw(500);
     }
     app.context.db = db;
-    app.listen(3000);
+    app.listen(8080);
 });
