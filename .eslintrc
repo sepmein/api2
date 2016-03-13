@@ -1,0 +1,46 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "standard"
+  ],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "Action": false,
+    "__DEV__": false,
+    "__PROD__": false,
+    "__DEBUG__": false,
+    "__DEBUG_NEW_WINDOW__": false,
+    "__BASENAME__": false
+  },
+  "rules": {
+    "semi": [
+      2,
+      "always"
+    ],
+    "max-len": [
+      2,
+      120,
+      2
+    ],
+    "yield-star-spacing": [
+      1,
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "space-before-function-paren": [
+      1,
+      "never"
+    ],
+    "generator-star-spacing": [
+      1,
+      {
+        "before": false,
+        "after": true
+      }
+    ]
+  }
+}
