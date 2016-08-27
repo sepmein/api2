@@ -11,7 +11,7 @@ let router = require('./router');
 /* Create Koa Server */
 let app = require('koa')();
 app.use(cors());
-app.use(function* getCollectionNameFromUrl(next) {
+app.use(function * getCollectionNameFromUrl(next) {
   let paths = this.path.split('/');
   this.assert(paths[1], 404, 'Please Provide Collection Name');
     // this.assert(paths.length <= 2, 404, 'Not Found');
